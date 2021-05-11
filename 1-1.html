@@ -21,12 +21,23 @@
                 var objects = await osql.connect(sql);
                 console.log(objects);
                 var html = '';
-                html = html + '<ul>';
+
+                html += '<table border="1">'
+                html += '<tr>';
+                html += '<td>' + '名前' + '</td>';
+                html += '<td>' + '時間' + '</td>';
+                html += '<td>' + 'ツイート' + '</td>';
+                html += '</tr>';
+
                 for (var i = 0; i < objects.length; i++) {
                     var object = objects[i];
-                    html = html + '<li>' + object.tweet + '</li>';
+                    html += '<tr>';
+                    html += '<td>' + object.name + '</td>';
+                    html += '<td>' + object.time + '</td>';
+                    html += '<td>' + object.tweet + '</td>';
+                    html += '</tr>';
                 }
-                html = html + '</ul>';
+                html += '</table>'
                 document.getElementById('result').innerHTML = html;
             }
 
