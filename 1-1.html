@@ -10,23 +10,40 @@
     <script type="text/javascript" src="osql.js"></script>
 
     <script>
-        function button1Pressed() {
-            execSelect();
+        window.onload = function () {
+            var timer = null;
+            function button1Pressed() {
+                execSelect();
+            }
+
+            async function execSelect() {
+                var sql = 'select * from Tweets order by time desc limit 20';
+                var objects = await osql.connect(sql);
+                console.log(objects);
+                var html = '';
+                html = html + '<ul>';
+                for (var i = 0; i < objects.length; i++) {
+                    var object = objects[i];
+                    html = html + '<li>' + object.tweet + '</li>';
+                }
+                html = html + '</ul>';
+                document.getElementById('result').innerHTML = html;
+            }
+
+            timer1 = setInterval(execSelect, 2000);
+
         }
 
+        async function insert() {
+            var userid = document.getElementById('tf1').value;
+            var tweet = document.getElementById('tf2').value;
 
-        async function execSelect() {
-            var sql = 'select * from Tweets order by time desc limit 20';
+            var sql = 'insert into Tweets (name, tweet, time) values("%USERID%", "%TWEET%", now());';
+            sql = sql.replace("%USERID%", userid);
+            sql = sql.replace("%TWEET%", tweet);
+            console.log(sql);
             var objects = await osql.connect(sql);
             console.log(objects);
-            var html = '';
-            html = html + '<ul>';
-            for (var i = 0; i < objects.length; i++) {
-                var object = objects[i];
-                html = html + '<li>' + object.tweet + '</li>';
-            }
-            html = html + '</ul>';
-            document.getElementById('result').innerHTML = html;
         }
     </script>
 
@@ -34,6 +51,11 @@
 
 <body>
     <h1>Tweets</h1>
+    ログイン名:<input id="tf1" value="名無し" type="textfield">
+    <br>
+    tweet:<input id="tf2" type="textfield">
+    <button onclick="insert()">tweet</button>
+    <br>
     <button onclick="button1Pressed()">X</button>
     <hr>
     <p id="result">xxxx</p>
